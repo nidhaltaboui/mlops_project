@@ -28,6 +28,11 @@ def run_cmd(cmd, check=True):
     return res.returncode
 
 
+@task(name="clone_repo")
+def clone_task():
+    m.run_clone()
+
+
 @task(name="install_dependencies")
 def install_task():
     m.run_install()
@@ -91,6 +96,7 @@ def code_flow():
 
 @flow(name="all")
 def all_flow():
+    clone_task()
     install_task()
     code_flow()
     x_train, x_test, y_train, y_test = prepare_task()

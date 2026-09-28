@@ -14,6 +14,7 @@ Deux usages :
 import argparse
 import subprocess
 import sys
+import os
 
 from model_pipeline import (
     prepare_data,
@@ -25,6 +26,16 @@ from model_pipeline import (
 
 DATA_PATH = "Churn_Modelling.csv"
 MODEL_PATH = "classifier.joblib"
+REPO_URL = "https://github.com/nidhaltaboui/mlops_project.git"
+
+
+def run_clone(repo_url=REPO_URL, dest="."):
+    """Clone le dépôt, ou le met à jour (git pull) s'il existe déjà."""
+    if os.path.isdir(os.path.join(dest, ".git")):
+        cmd = ["git", "-C", dest, "pull", "--ff-only"]
+    else:
+        cmd = ["git", "clone", repo_url, dest]
+    subprocess.run(cmd, check=True)
 
 
 def run_install(requirements="requirements.txt"):
