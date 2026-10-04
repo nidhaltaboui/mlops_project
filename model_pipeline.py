@@ -73,7 +73,15 @@ def prepare_data(data_path: str):
         x_test
     )  # transform (pas fit_transform) sur le test
 
-    return x_train_scaled, x_test_scaled, y_train, y_test
+    return (
+        x_train_scaled,
+        x_test_scaled,
+        y_train,
+        y_test,
+        encoder,
+        scaler,
+        list(x.columns),
+    )
 
 
 def train_model(

@@ -7,7 +7,7 @@ Le flow 'all' est planifié une fois par jour à 02h00.
 
 from prefect import serve
 
-from pipeline_prefect import all_flow, train_flow, evaluate_flow, code_flow
+from pipeline_prefect import all_flow, train_flow, evaluate_flow, code_flow, api_flow
 
 if __name__ == "__main__":
     serve(
@@ -27,5 +27,9 @@ if __name__ == "__main__":
         code_flow.to_deployment(
             name="ml-pipeline-code",
             tags=["quality", "mlops"],
+        ),
+        api_flow.to_deployment(
+            name="ml-pipeline-api",
+            tags=["api", "mlops"],
         ),
     )

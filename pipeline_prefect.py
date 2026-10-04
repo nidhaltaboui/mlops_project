@@ -86,6 +86,23 @@ def evaluate_task(model, x_test, y_test):
     return m.run_evaluate(model, x_test, y_test)
 
 
+@task(name="run_api")
+def api_task():
+    run_cmd(
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "app:app",
+            "--host",
+            "0.0.0.0",
+            "--port",
+            "8000",
+        ],
+        check=True,
+    )
+
+
 @flow(name="code")
 def code_flow():
     format_task()
@@ -118,12 +135,18 @@ def evaluate_flow():
     evaluate_task(model, x_test, y_test)
 
 
+@flow(name="api")
+def api_flow():
+    api_task()
+
+
 FLOWS = {
     "code": code_flow,
     "all": all_flow,
     "train": train_flow,
     "entrainement": train_flow,
     "evaluate": evaluate_flow,
+    "api": api_flow,
 }
 
 if __name__ == "__main__":

@@ -47,7 +47,8 @@ def run_install(requirements="requirements.txt"):
 
 
 def run_prepare(data_path=DATA_PATH):
-    """Prépare les données. Retourne x_train, x_test, y_train, y_test."""
+    """Prépare les données. Retourne x_train, x_test, y_train, y_test,
+    encoder, scaler, feature_columns."""
     return prepare_data(data_path)
 
 
@@ -96,11 +97,13 @@ def main():
 
     if args.action == "load":
         model = run_load(args.model_path)
-        _, x_test, _, y_test = run_prepare(args.data)
+        _, x_test, _, y_test, _, _, _ = run_prepare(args.data)
         run_evaluate(model, x_test, y_test)
         return
 
-    x_train, x_test, y_train, y_test = run_prepare(args.data)
+    x_train, x_test, y_train, y_test, encoder, scaler, feature_columns = run_prepare(
+        args.data
+    )
 
     if args.action == "prepare":
         print("Données préparées avec succès.")
@@ -115,6 +118,12 @@ def main():
         run_evaluate(model, x_test, y_test)
     if args.action in ("save", "all"):
         run_save(model, args.model_path)
+        import joblib
+
+        joblib.dump(encoder, "gender_encoder.joblib")
+        joblib.dump(scaler, "scaler.joblib")
+        joblib.dump(feature_columns, "feature_columns.joblib")
+        print("Encodeur, scaler et colonnes sauvegardés.")
 
 
 if __name__ == "__main__":
